@@ -1,0 +1,34 @@
+[
+  {
+    "id": "33",
+    "patient": {
+      "name": "Marco"
+    },
+    "doctor": {
+      "name": "Dani",
+      "specialization": "X"
+    },
+    "recipe_duration": "",
+    "distance_between_prescriptions": "23",
+    "future_prescription_date": "12",
+    "current_prescription_date": "66",
+    "last_prescription_dates": "13",
+    "status": "ttttt"
+  },
+  {
+    "id": "33",
+    "patient": {
+      "name": "Marco"
+    },
+    "doctor": {
+      "name": "Dani",
+      "specialization": "X"
+    },
+    "recipe_duration": "",
+    "distance_between_prescriptions": "23",
+    "future_prescription_date": "12",
+    "current_prescription_date": "66",
+    "last_prescription_dates": "13",
+    "status": "ttttt"
+  }
+]
