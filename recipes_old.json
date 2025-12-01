@@ -137,43 +137,5 @@
     "status": "3",
     "distance_between_prescriptions": 29,
     "renewed_today": false
-  },
-  {
-    "id": "1761734004010",
-    "patient": {
-      "name": "Maria Popescu"
-    },
-    "doctor": {
-      "name": "Dr. Alin Mircea",
-      "specialization": "Psihiatru"
-    },
-    "future_prescription_date": "2026-01-27T00:00:00.000Z",
-    "current_prescription_date": "2025-10-29",
-    "recipe_duration": "3 luni",
-    "last_prescription_dates": [
-      "2025-10-29"
-    ],
-    "status": "3",
-    "distance_between_prescriptions": 90,
-    "renewed_today": false
-  },
-  {
-    "id": "1761734167091",
-    "patient": {
-      "name": "Zora Chelici"
-    },
-    "doctor": {
-      "name": "Dr. Ana Azuga",
-      "specialization": "Psihiatru"
-    },
-    "future_prescription_date": "2025-11-28T00:00:00.000Z",
-    "current_prescription_date": "2025-10-29",
-    "recipe_duration": "1 lună",
-    "last_prescription_dates": [
-      "2025-10-29"
-    ],
-    "status": "3",
-    "distance_between_prescriptions": 30,
-    "renewed_today": false
   }
 ]
