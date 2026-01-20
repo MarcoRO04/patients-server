@@ -8,14 +8,14 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const recipesRouter = require('./routes/recipes');
+const patientsRouter = require('./routes/patients');
+const doctorsRouter = require('./routes/doctors');
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
-
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -27,6 +27,10 @@ app.use(cors())
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/recipes',recipesRouter);
+app.use('/patients',patientsRouter);
+app.use('/doctors',doctorsRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
