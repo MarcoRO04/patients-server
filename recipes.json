@@ -1,32 +1,17 @@
 [
   {
-    "id": "1768899749391",
+    "id": "1768907589664",
+    "doctor": {
+      "name": "Dr. Mihai Elena",
+      "specialization": "Neurolog"
+    },
     "patient": {
       "name": "Zora Chelici"
     },
-    "doctor": {
-      "name": "Dr. Mihai Elena",
-      "specialization": "Neurolog"
-    },
     "recipe_duration": "1 lună",
     "prescription_dates": [
-      "2026-01-20"
-    ],
-    "distance_between_prescriptions": "NaN",
-    "status": "3"
-  },
-  {
-    "id": "1768901138939",
-    "patient": {
-      "name": "Mirabela Jovici"
-    },
-    "doctor": {
-      "name": "Dr. Mihai Elena",
-      "specialization": "Neurolog"
-    },
-    "recipe_duration": "1 lună",
-    "prescription_dates": [
-      "2026-01-20"
+      "2025-12-22",
+      "2026-01-16"
     ]
   }
 ]

@@ -2,81 +2,41 @@ const express = require('express');
 const fs = require("node:fs");
 const router = express.Router();
 
-/*each time the FE makes a request to get list or recipes, firstly recalculate all the recipes statuses and date differences until their renewal*/
-function recalculate_distance_between_prescriptions(recipesList) {
-    let status_changed_cnt = 0
-    for (let recipe in recipesList) {
-        //the difference between the future prescription and the current date, converted from milliseconds to days, and from number to string
-        const date_difference = Math.round((Date.parse(recipesList[recipe].future_prescription_date) - Date.now()) / 8.64e7).toString()
-        //if the date obtained is different, then modify the status
-        if (recipesList[recipe].distance_between_prescriptions !== date_difference) {
-            status_changed_cnt++
-            recipesList[recipe].distance_between_prescriptions = date_difference
-            if (recipesList[recipe].distance_between_prescriptions < 0) {
-                recipesList[recipe].status = '1'
-            } else if (
-                recipesList[recipe].distance_between_prescriptions >= 0 &&
-                recipesList[recipe].distance_between_prescriptions <= 7
-            ) {
-                recipesList[recipe].status = '1'
-            } else if (
-                recipesList[recipe].distance_between_prescriptions >= 8 &&
-                recipesList[recipe].distance_between_prescriptions <= 14
-            ) {
-                recipesList[recipe].status = '2'
-            } else {
-                recipesList[recipe].status = '3'
-            }
-        }
-    }
-    if (status_changed_cnt > 0) {
-        fs.writeFileSync('./recipes.json',JSON.stringify(recipesList,null, 2),'utf-8');
-    }
-}
 
+function calculate_r_properties(recipe){
+    let new_recipe = {id: '', patient: {name: ''}, doctor: {name: '', specialization: ''}, future_prescription_date: '', recipe_duration: '',
+        prescription_dates: [], status: '', distance_between_prescriptions: ''};
+    new_recipe.id = recipe.id;
+    new_recipe.patient = recipe.patient;
+    new_recipe.doctor = recipe.doctor;
+    new_recipe.recipe_duration = recipe.recipe_duration;
+    new_recipe.prescription_dates = recipe.prescription_dates;
+
+    let recipe_period = new_recipe.recipe_duration.split(' ')
+    new_recipe.future_prescription_date = new Date(Date.parse(new_recipe.prescription_dates[new_recipe.prescription_dates.length - 1]) + recipe_period[0] * 30 * 24 * 60 * 60 * 1000)
+    new_recipe.distance_between_prescriptions = Math.round((Date.parse(new_recipe.future_prescription_date) - Date.now()) / 8.64e7).toString()
+    if (new_recipe.distance_between_prescriptions < 0) {
+        new_recipe.status = '1'
+    } else if (new_recipe.distance_between_prescriptions >= 0 && new_recipe.distance_between_prescriptions <= 7) {
+        new_recipe.status = '1'
+    } else if (new_recipe.distance_between_prescriptions >= 8 && new_recipe.distance_between_prescriptions <= 14) {
+        new_recipe.status = '2'
+    } else {
+        new_recipe.status = '3'
+    }
+    return new_recipe;
+}
 
 function getRecipesList() {
     try {
-        /*before sending the list, I want to recalculate the recipes dates*/
-        recalculate_distance_between_prescriptions(JSON.parse(fs.readFileSync('./recipes.json', 'utf8')))
-        // console.log(fs.readFileSync('./recipes.json', 'utf8'))
-        return fs.readFileSync('./recipes.json', 'utf8')
+        let recipes_list = JSON.parse(fs.readFileSync('./recipes.json', 'utf8'))
+        for (let recipe in recipes_list) {
+            recipes_list[recipe] = calculate_r_properties(recipes_list[recipe]) /*add properties to each recipe inside the list*/
+        }
+        return recipes_list
     } catch (err) {
         console.error(err);
     }
-}
-/*Besides calculating the future prescription date, based on the current date,
-     * this function also sets the status of the recipe and calculated the distance in days until the next renewal
-     * the status should be always '3'
-       but if, idk, the recipe was prescribed 2-3 weeks ago, we check it, and put the status accordingly
-     * */
-
-function calculate_recipe_properties(recipe){
-        let recipe_period = []
-        recipe_period = recipe.recipe_duration.split(' ')
-
-        //The future prescription date is the current date in milliseconds + the recipe duration converted in milliseconds
-        recipe.future_prescription_date = new Date(Date.parse(recipe.current_prescription_date) + recipe_period[0] * 30 * 24 * 60 * 60 * 1000,)
-
-        if (Date.parse(recipe.future_prescription_date) > Date.now()) {
-            const dates_difference = Date.parse(recipe.future_prescription_date) - Date.now()
-            const day = 8.64e7 // how many milliseconds in a day
-
-            //set the initial difference between dates (it will be changed later, every day)
-            recipe.distance_between_prescriptions = Math.round(dates_difference / day)
-            if (recipe.distance_between_prescriptions >= 0 && recipe.distance_between_prescriptions <= 7) {
-                //red
-                recipe.status = '1'
-            } else if (recipe.distance_between_prescriptions >= 8 && recipe.distance_between_prescriptions <= 14) {
-                //orange
-                recipe.status = '2'
-            } else {
-                //green
-                recipe.status = '3'
-            }
-            return recipe
-        }
-        return null
 }
 /*add the new recipe to the list*/
 function writeUpdatedRecipesList(recipe) {
@@ -129,17 +89,9 @@ function deleteRecipeById(id) {
 
 /* get all recipes */
 router.get('/', function (req, res) {
-    let recipes_list_from_file = JSON.parse(getRecipesList());
-    res.send({list : recipes_list_from_file});
+    let recipes_list_with_complete_properties = getRecipesList();
+    res.send({list : recipes_list_with_complete_properties});
 })
-
-/*get recipe with id*/
-// router.get('/:id', function (req, res) {
-//     let id = req.params.id
-//     console.log(id)
-//     let searched_recipe = getRecipeIndexById(id) // I changed the getRecipeById() to get the index of the recipe
-//     res.send({result: searched_recipe})
-// })
 
 /* post new resource - recipe*/
 router.post('/new',function(req,res){
