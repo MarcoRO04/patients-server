@@ -1,7 +1,26 @@
 const express = require('express');
 const fs = require("node:fs");
 const router = express.Router();
+const {Client} = require("pg");
+const {statement_timeout} = require("pg/lib/defaults");
 
+const client = new Client({
+    host: 'localhost',
+    user: 'marcorotunjanu',
+    port: 5432,
+    password: '291104',
+    database: 'casa-fabian',
+});
+
+// client.connect();
+// client.query(`SELECT * FROM prescriptions`, (error, res) => {
+//     if (error) {
+//         console.error(error);
+//     }else{
+//         console.log(res.rows)
+//     }
+//     client.end();
+// })
 
 function calculate_r_properties(recipe){
     let new_recipe = {id: '', patient: {name: ''}, doctor: {name: '', specialization: ''}, future_prescription_date: '', recipe_duration: '',
@@ -38,10 +57,10 @@ function getRecipesList() {
         console.error(err);
     }
 }
-/*add the new recipe to the list*/
+
+/*add the new recipe to the list and then save it to the JSON file*/
 function writeUpdatedRecipesList(recipe) {
     try {
-
         let recipesList = JSON.parse(fs.readFileSync('./recipes.json', 'utf8'));
         // console.log(recipesList);
         recipesList.push(recipe)
@@ -50,6 +69,20 @@ function writeUpdatedRecipesList(recipe) {
     } catch (err) {
         console.error(err);
     }
+}
+
+async function addNewRecipeToDB(recipe) {
+    await client.connect();
+    const insert_query = {
+        text: `INSERT INTO prescriptions (id, duration, taking_date, patient_id, doctor_id) VALUES ($1, $2, $3, $4, $5)`,
+        values: [recipe.id, recipe.recipe_duration, JSON.stringify(recipe.prescription_dates),recipe.patient.name,recipe.doctor.name]
+    }
+    client.query(insert_query,(error, res) => {
+        if (error) {
+            console.error(error);
+        }
+        client.end();
+    })
 }
 
 /*edit recipe details*/
@@ -91,6 +124,9 @@ function deleteRecipeById(id) {
 router.get('/', function (req, res) {
     let recipes_list_with_complete_properties = getRecipesList();
     res.send({list : recipes_list_with_complete_properties});
+    // if (USE_DB){
+    //     // get from DB
+    // }
 })
 
 /* post new resource - recipe*/
@@ -98,6 +134,16 @@ router.post('/new',function(req,res){
     const recipe = req.body;
     // console.log(recipe);
     writeUpdatedRecipesList(recipe)
+    addNewRecipeToDB(recipe)//.then((res) => {
+    //     res.send({status:true,rsp:"Am salvat lista de retete cu success!"});
+    //     // res.status(200).json({
+    //     //     message: 'Recipe added successfully',
+    //     // })
+    // }).catch((err) => {
+    //     res.status(303).json({
+    //         message: 'Error occurred: ' + err.message,
+    //     })
+    // })
     res.send({status:true,rsp:"Am salvat lista de retete cu success!"});
 })
 
@@ -118,4 +164,5 @@ router.put('/:id',function(req,res){
     res.send({result:true})
 })
 
+module.exports = Client;
 module.exports = router;

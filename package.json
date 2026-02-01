@@ -13,6 +13,22 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11"
-  }
+    "pg": "^8.18.0",
+    "pug": "2.0.0-beta11",
+    "serialport": "^13.0.0"
+  },
+  "description": "",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcoRO04/patients-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MarcoRO04/patients-server/issues"
+  },
+  "homepage": "https://github.com/MarcoRO04/patients-server#readme"
 }

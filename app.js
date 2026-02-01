@@ -10,6 +10,7 @@ const usersRouter = require('./routes/users');
 const recipesRouter = require('./routes/recipes');
 const patientsRouter = require('./routes/patients');
 const doctorsRouter = require('./routes/doctors');
+const pillsRouter = require('./routes/pills');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/users', usersRouter);
 app.use('/recipes',recipesRouter);
 app.use('/patients',patientsRouter);
 app.use('/doctors',doctorsRouter);
+app.use('/pills',pillsRouter);
 
 
 
