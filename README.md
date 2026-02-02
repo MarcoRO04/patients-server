@@ -33,4 +33,4 @@ To run the application, the simplest way is to type the command below in the IDE
 node ./bin/www
 ```
 
-or it can be started from the IDE run button too.
+or it can be started from the IDE **RUN button** too.
