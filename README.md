@@ -14,6 +14,8 @@ It provides a straight-forward interface for connecting to the database and crea
 
 In addition, the backend calculates some dynamic prescription properties, like the status and the renewal date, instead of the frontend, for efficency purposes.
 
+The frontend project can be found [here](https://github.com/MarcoRO04/patients-care-app).
+
 ## Recommended IDE Setup
 [Webstorm](https://www.jetbrains.com/webstorm/download/?section=windows)
 
