@@ -1,6 +1,6 @@
 # Prescriptions server
 
-Alias the **backend**, it receives requests from the Prescriptions FrontEnd and performs the requested **CRUD operations** on the database and sends back the results.
+Alias the **backend**, it receives requests from the Prescriptions Frontend and performs the requested **CRUD operations** on the database and sends back the results.
 
 The interesting part about the backend is how it **communicates**, as a server, with other
 devices (e.g. Arduino Board, Database Server), after it received the request from the frontend.
