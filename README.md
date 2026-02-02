@@ -12,6 +12,8 @@ send each other messages. After the communication is over, the backend will send
 For the communication with the database, **"node-postgres" module** was employed.
 It provides a straight-forward interface for connecting to the database and creating queries.
 
+In addition, the backend takes care of the calculation of some dynamic prescription properties, like the status and the renewal date of the prescription, and sends to the frontend the complete prescription.
+
 ## Recommended IDE Setup
 [Webstorm](https://www.jetbrains.com/webstorm/download/?section=windows)
 
