@@ -106,15 +106,9 @@ function writeUpdatedRecipesListInJSON(recipe) {
 /*add new recipe to DB*/
 function addNewRecipeToDB(recipe) {
     const insert_query = {
-        text: `INSERT INTO prescriptions (id, duration, prescription_dates, patient_name, doctor_name, doctor_specialization) VALUES ($1, $2, $3, $4, $5, $6)`,
-        values: [recipe.id, recipe.recipe_duration, JSON.stringify(recipe.prescription_dates),recipe.patient.name,recipe.doctor.name,recipe.doctor.specialization]
+        text: `INSERT INTO prescriptions (id, duration, prescription_dates, patient_name, doctor_name, doctor_specialization) VALUES ('${recipe.id}', '${recipe.recipe_duration}', '${JSON.stringify(recipe.prescription_dates)}', '${recipe.patient.name}', '${recipe.doctor.name}','${recipe.doctor.specialization}')`,
     }
-    client.query(insert_query,(error) => {
-        if (error) {
-            console.error(error);
-        }
-        // client.end();
-    })
+    return client.query(insert_query)
 }
 
 /*edit recipe details in JSON*/
@@ -193,7 +187,15 @@ router.post('/new',function(req,res){
     const recipe = req.body;
     // console.log(recipe);
     // writeUpdatedRecipesListInJSON(recipe)
-    addNewRecipeToDB(recipe)//.then((res) => {
+    addNewRecipeToDB(recipe).then((result)=>{
+        if (result){
+            res.send({status:true,rsp:"Am salvat lista de retete cu success!"});
+        }else{
+            res.send({status:false,rsp:"Insertion failed"});
+        }
+    }).catch((err)=>{
+        res.send({status:false,rsp:"insertion query function failed"});
+    })
     //     res.send({status:true,rsp:"Am salvat lista de retete cu success!"});
     //     // res.status(200).json({
     //     //     message: 'Recipe added successfully',
@@ -203,7 +205,6 @@ router.post('/new',function(req,res){
     //         message: 'Error occurred: ' + err.message,
     //     })
     // })
-    res.send({status:true,rsp:"Am salvat lista de retete cu success!"});
 })
 
 /*delete recipe*/
