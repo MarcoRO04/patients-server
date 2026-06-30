@@ -17,7 +17,7 @@ client.connect()
 
 let boardConnected = true
 
-const port = new SerialPort({path: "/dev/cu.usbmodem1401", baudRate: 9600},(error) =>
+const port = new SerialPort({path: "/dev/cu.usbmodem1101", baudRate: 9600},(error) =>
 {
     if (error) {
         console.log('Error: ', error.message)
@@ -137,8 +137,8 @@ function getPillsFromJSON(){
         console.error(err);
     }
 }
-//readXLSFile();
 
+// send back the result received from the prototype
 router.get('/test/:test_type',async (req, res) => {
     if (!boardConnected){
         res.send({arduino: false, result:'board not connected'});
@@ -152,7 +152,7 @@ router.get('/test/:test_type',async (req, res) => {
     }
 })
 
-/* sort pills for patient*/
+/*extract the numbers from the pills distribution, concatenate them in a string and send it to the frontend*/
 router.get('/sort/:id',async (req, res) => {
     let id = req.params.id;
     let pills = getPillsConfigurationFromDB(id)
@@ -162,7 +162,7 @@ router.get('/sort/:id',async (req, res) => {
 
 })
 
-/* sort pills for patient*/
+/* get the pills distribution of a prescription*/
 router.get('/pills_configuration/:id',async (req, res) => {
     let id = req.params.id;
     console.log(id);
@@ -174,6 +174,7 @@ router.get('/pills_configuration/:id',async (req, res) => {
 })
 
 
+// send back to the frontend if the arduino board is connected or not
 router.get('/connect',async (req, res) => {
     if (!boardConnected){
         res.send({arduino: false});
@@ -182,7 +183,7 @@ router.get('/connect',async (req, res) => {
     }
 })
 
-/*get the pills extracted in the JSON file from the NOMENCLATOR*/
+/*send to the frontend the pills extracted in the JSON file from the NOMENCLATOR*/
 router.get('/', async (req, res) => {
     let pills_list = getPillsFromJSON();
     res.send({list: pills_list});
